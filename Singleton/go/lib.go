@@ -9,14 +9,13 @@ type singleton struct {
 }
 
 // 协程安全
-var mutex = &sync.Mutex{}
+var once = sync.Once{}
 var instance *singleton
 
 func NewSingleton() *singleton {
-	if instance == nil {
-		mutex.Lock()
-		defer mutex.Unlock()
+	// 只执行一次
+	once.Do(func() {
 		instance = &singleton{}
-	}
+	})
 	return instance
 }
